@@ -10,7 +10,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Listings {
+model Listing {
     id          String   @id @default(cuid())
     userId      String
     createdAt   DateTime @default(now())

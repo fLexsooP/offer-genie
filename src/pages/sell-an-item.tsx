@@ -1,19 +1,31 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 
 type SellItemForm = {
   name: string;
   description: string;
-  price: number;
+  price: string;
 };
 
 const SellAnItem: NextPage = () => {
-  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const createListing = api.listings.create.useMutation();
+  const router = useRouter()
+
   const { register, handleSubmit } = useForm<SellItemForm>();
-  const onSubmit = (formData: SellItemForm) => console.log(formData);
+  const onSubmit = (formData: SellItemForm) => {
+    // console.log(formData);
+    createListing.mutateAsync({
+      ...formData,
+      price: parseFloat(formData.price),
+    }).then(() => {
+      router.push("/")
+    })
+  };
   return (
     <>
       <Head>
@@ -24,7 +36,10 @@ const SellAnItem: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center bg-gray-500">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <h1>Sell an Item</h1>
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div>
               <label
                 htmlFor="name"
@@ -35,7 +50,7 @@ const SellAnItem: NextPage = () => {
               <input
                 id="name"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                {...(register("name"), { required: true })}
+                {...register("name", { required: true })}
               />
             </div>
             <div>
@@ -48,7 +63,7 @@ const SellAnItem: NextPage = () => {
               <textarea
                 id="descrpition"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                {...(register("description"), { required: true })}
+                {...register("description", { required: true })}
               />
             </div>
             <div>
@@ -63,7 +78,7 @@ const SellAnItem: NextPage = () => {
                 type="number"
                 step="0.01"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                {...(register("price"), { required: true })}
+                {...register("price", { required: true })}
               />
             </div>
             <button
