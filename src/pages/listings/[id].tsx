@@ -1,13 +1,21 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { useUser } from "@clerk/nextjs";
 import { Listing } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import { useForm } from "react-hook-form";
 
 const ListingView: NextPage = () => {
   const router = useRouter();
-  console.log(router.query.id);
+  const user = useUser();
+  const { register, handleSubmit, reset } = useForm<{ message: string }>();
+
+  // console.log(router.query.id);
+
   const listing = api.listings.get.useQuery(
     {
       listingId: router.query.id as string,
@@ -16,9 +24,12 @@ const ListingView: NextPage = () => {
       enabled: !!router.query.id,
     }
   );
+
+  const sendMessage = api.listings.sendMessage.useMutation();
+
   const listingItem = listing.data;
   if (!listingItem) {
-    return;
+    return null;
   }
 
   return (
@@ -33,6 +44,37 @@ const ListingView: NextPage = () => {
           <h1 className="mt-12 text-4xl">{listingItem.name}</h1>
           <p>{listingItem.description}</p>
           <p>$ {listingItem.price}</p>
+
+          {user.isSignedIn && (
+            <form
+              className="flex flex-col gap-4"
+              onSubmit={handleSubmit((formData) => {
+                sendMessage
+                  .mutateAsync({
+                    message: formData.message,
+                    listingId: listingItem.id,
+                  })
+                  .then(() => reset());
+              })}
+            >
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="name"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  {...register("message", { required: true })}
+                />
+              </div>
+              <button className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Send Message
+              </button>
+            </form>
+          )}
         </div>
       </main>
     </>
