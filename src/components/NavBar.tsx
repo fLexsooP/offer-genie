@@ -7,7 +7,7 @@ export function NavBar() {
   return (
     <nav className="border-gray-200 bg-gray-400 dark:border-gray-700 dark:bg-gray-800">
       <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
-        <a href="#" className="flex items-center">
+        <Link href="/" className="flex items-center">
           <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="mr-3 h-8"
@@ -16,7 +16,7 @@ export function NavBar() {
           <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
             OfferGenie
           </span>
-        </a>
+        </Link>
         <button
           data-collapse-toggle="navbar-solid-bg"
           type="button"
@@ -51,15 +51,26 @@ export function NavBar() {
               </Link>
             </li>
             {user.isSignedIn && (
-              <li>
-                <Link
-                  href="/sell-an-item"
-                  className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:bg-blue-600 md:bg-transparent md:p-0 md:text-blue-500 md:dark:bg-transparent md:dark:text-blue-500"
-                  aria-current="page"
-                >
-                  Sell an Item
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    href="/offers"
+                    className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:bg-blue-600 md:bg-transparent md:p-0 md:text-blue-500 md:dark:bg-transparent md:dark:text-blue-500"
+                    aria-current="page"
+                  >
+                    Offers
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/sell-an-item"
+                    className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:bg-blue-600 md:bg-transparent md:p-0 md:text-blue-500 md:dark:bg-transparent md:dark:text-blue-500"
+                    aria-current="page"
+                  >
+                    Sell an Item
+                  </Link>
+                </li>
+              </>
             )}
             {!user.isSignedIn && (
               <li>

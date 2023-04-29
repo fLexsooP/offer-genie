@@ -19,12 +19,24 @@ export const listingsRouter = createTRPCRouter({
         },
       });
     }),
+  getMessage: protectedProcedure
+    .query(async ({ ctx }) => {
+      const userId = ctx.auth.userId;
+      const listing = await ctx.prisma.listing.findMany({
+        where: {
+          userId,
+        },
+        include: {
+          message: true,
+        },
+      });
+      return listing.flatMap((item) => item.message);
+    }),
   sendMessage: protectedProcedure
     .input(z.object({ message: z.string(), listingId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const message = await ctx.prisma.message.create({
         data: {
-          ...input,
           fromUser: ctx.auth.userId,
           fromUserName: ctx.auth.user?.username ?? "unknown",
           message: input.message,

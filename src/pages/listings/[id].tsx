@@ -1,20 +1,15 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useUser } from "@clerk/nextjs";
-import { Listing } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
 
 const ListingView: NextPage = () => {
   const router = useRouter();
-  const user = useUser();
   const { register, handleSubmit, reset } = useForm<{ message: string }>();
-
-  // console.log(router.query.id);
 
   const listing = api.listings.get.useQuery(
     {
@@ -25,6 +20,7 @@ const ListingView: NextPage = () => {
     }
   );
 
+  const user = useUser();
   const sendMessage = api.listings.sendMessage.useMutation();
 
   const listingItem = listing.data;
@@ -54,7 +50,9 @@ const ListingView: NextPage = () => {
                     message: formData.message,
                     listingId: listingItem.id,
                   })
-                  .then(() => reset());
+                  .then(() => {
+                    reset();
+                  });
               })}
             >
               <div>

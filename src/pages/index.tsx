@@ -1,26 +1,23 @@
-import { Listing } from "@prisma/client";
+import { type Listing } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { api } from "~/utils/api";
 
 function Card({ listing }: { listing: Listing }) {
   return (
     <div className="h-100 max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
-      <a href="#">
-        <img
-          className="rounded-t-lg"
-          src=""
-          alt="image"
-        />
-      </a>
+      <div className="relative h-32 w-full">
+        <Image className="object-cover" src="/" alt="image" fill />
+      </div>
       <div className="p-5">
         <a href="#">
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {listing.name}
+            {listing.name} - {listing.price}
           </h5>
         </a>
-        <p className="h-28 mb-3 font-normal text-gray-700 dark:text-gray-400">
+        <p className="mb-3 h-28 font-normal text-gray-700 dark:text-gray-400">
           {listing.description}
         </p>
         <Link
@@ -49,6 +46,7 @@ function Card({ listing }: { listing: Listing }) {
 
 const Home: NextPage = () => {
   const listings = api.listings.list.useQuery();
+  // console.log(listings);
 
   return (
     <>
@@ -58,7 +56,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col gap-12 bg-gray-500">
-        <h1 className="mt-12 text-4xl pl-4">Items For Sale</h1>
+        <h1 className="mt-12 pl-4 text-4xl">Items For Sale</h1>
         <div className="container grid grid-cols-4 items-center justify-center gap-6 px-4 py-16">
           {listings?.data?.map((listing) => (
             <Card key={listing.id} listing={listing} />
