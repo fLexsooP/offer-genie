@@ -33,12 +33,12 @@ export const listingsRouter = createTRPCRouter({
       return listing.flatMap((item) => item.message);
     }),
   sendMessage: protectedProcedure
-    .input(z.object({ message: z.string(), listingId: z.string() }))
+    .input(z.object({ message: z.string(), listingId: z.string(), fromUserName: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const message = await ctx.prisma.message.create({
         data: {
           fromUser: ctx.auth.userId,
-          fromUserName: ctx.auth.user?.username ?? "unknown",
+          fromUserName: input.fromUserName,
           message: input.message,
           listingId: input.listingId,
         },
