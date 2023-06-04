@@ -72,7 +72,7 @@ export function NavBar() {
             {!user.isSignedIn && (
               <li>
                 <SignInButton>
-                  <span className="hover:tegreen-500 cursor-pointer text-white">
+                  <span className="hover:text-green-500 cursor-pointer text-white">
                     Sign In
                   </span>
                 </SignInButton>
