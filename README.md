@@ -1,15 +1,15 @@
 # Offer-genie
 
-Offer-genie is an online marketplace project provides a platform for users to browse items, make sell item posts, message sellers, and make offers. 
+Offer-genie is an online marketplace project provides a platform for users to browse items, make sell item posts, message sellers, and make offers.
 
 ## Tech Stack
-React
-Tailwind CSS
-Next.js
-TypeScript
-tRPC route
-PostgreSQL
-Prisma
+- React
+- Tailwind CSS
+- Next.js
+- TypeScript
+- tRPC route
+- PostgreSQL
+- Prisma
 
 ## Features
 Authentication: Offer-genie uses Clerk for authentication, providing a secure login and registration system.
